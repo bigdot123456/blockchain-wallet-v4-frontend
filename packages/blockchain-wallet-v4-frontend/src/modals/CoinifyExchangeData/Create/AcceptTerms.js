@@ -8,8 +8,9 @@ import { Field } from 'redux-form'
 import { actions, selectors } from 'data'
 import { CheckBox } from 'components/Form'
 import { FormattedMessage, FormattedHTMLMessage } from 'react-intl'
-import { Button, HeartbeatLoader, Text } from 'blockchain-info-components'
+import { Button, HeartbeatLoader, Text, Link, Icon } from 'blockchain-info-components'
 import FAQ1 from './faq.js'
+import { spacing } from 'services/StyleService'
 import { Form, ColLeft, ColRight, InputWrapper, PartnerHeader, PartnerSubHeader, ButtonWrapper, ErrorWrapper, ColRightInner } from 'components/BuySell/Signup'
 
 const checkboxShouldBeChecked = value => value ? undefined : 'You must agree with the terms and conditions'
@@ -19,9 +20,37 @@ const AcceptTermsContainer = styled.div`
   flex-direction: row;
   margin-top: 25px;
   font-size: 12px;
+  font-weight: 400;
   a {
     color: ${props => props.theme['brand-secondary']}
   }
+`
+const FieldsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+`
+const FieldContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+`
+const VerifiedContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+const FieldBox = styled.div`
+  border: 1px solid #DDDDDD;
+  padding: 5px 15px;
+  display: flex;
+  flex-direction: row;
+  width: 85%;
+  justify-content: space-between;
+`
+const IconContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
 `
 
 class AcceptTerms extends Component {
@@ -50,18 +79,41 @@ class AcceptTerms extends Component {
 
   render () {
     const { busy } = this.state
-    const { invalid, email, signupError } = this.props
+    const { invalid, email, signupError, editEmail } = this.props
 
     return (
       <Form onSubmit={this.handleSignup}>
         <ColLeft>
           <InputWrapper>
             <PartnerHeader>
-              <FormattedMessage id='coinifyexchangedata.create.verifyemail.partner.header.enter_email_code' defaultMessage='Blockchain + Coinify' />
+              <FormattedMessage id='coinifyexchangedata.create.header' defaultMessage='Create Your Account' />
             </PartnerHeader>
             <PartnerSubHeader>
-              <FormattedHTMLMessage id='coinifyexchangedata.create.accept.partner.header.enter_email_code' defaultMessage='We teamed up with Coinify’s exchange platform to offer buy and sell to our customers in Europe. We just sent a verification code to your {email} email address.' values={{email: email}} />
+              <FormattedHTMLMessage id='coinifyexchangedata.create.createaccount.partner.subheader' defaultMessage="Your buy and sell experience is being streamlined. We've teamed up with Coinify to make your dreams of simply managing funds a reality." />
             </PartnerSubHeader>
+            <PartnerSubHeader style={spacing('mt-10')}>
+              <FormattedHTMLMessage id='coinifyexchangedata.create.createaccount.partner.subheader2' defaultMessage="Rest assured: there are only a few steps separating you from the good stuff. Let's start by confirming your verified email address." />
+            </PartnerSubHeader>
+            <FieldsContainer>
+              <FieldContainer>
+                <Text size='14px' style={spacing('mb-10')}>
+                  <FormattedMessage id='coinifyexchangedata.create.createaccount.partner.verifiedemail' defaultMessage='Verified Email Address' />
+                </Text>
+                <VerifiedContainer>
+                  <FieldBox>
+                    <Text size='14px' weight={300}>
+                      { email }
+                    </Text>
+                    <Link onClick={editEmail} size='14px' weight={300}>
+                      <FormattedMessage id='coinifyexchangedata.create.createaccount.partner.edit' defaultMessage='edit' />
+                    </Link>
+                  </FieldBox>
+                  <IconContainer>
+                    <Icon name='checkmark-in-circle-filled' color='success' size='20px' />
+                  </IconContainer>
+                </VerifiedContainer>
+              </FieldContainer>
+            </FieldsContainer>
             <AcceptTermsContainer>
               <Field name='terms' validate={[checkboxShouldBeChecked]} component={CheckBox}>
                 <FormattedHTMLMessage id='coinifyexchangedata.create.accept.terms' defaultMessage="I accept Blockchain's <a>Terms of Service</a>, Coinify's <a>Terms of Service</a> & <a>Privary Policy</a>." />

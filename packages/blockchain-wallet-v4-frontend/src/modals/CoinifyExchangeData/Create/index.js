@@ -8,6 +8,10 @@ import ui from 'redux-ui'
 import { path } from 'ramda'
 
 class CreateContainer extends Component {
+  constructor (props) {
+    super(props)
+    this.state = { editVerified: false }
+  }
   componentDidMount () {
     if (this.props.emailVerified) {
       this.props.updateUI({ create: 'create_account' })
@@ -18,7 +22,10 @@ class CreateContainer extends Component {
   }
 
   render () {
-    return <Create {...this.props} />
+    return <Create {...this.props}
+      editEmail={() => { this.props.updateUI({ create: 'change_email' }); this.setState({ editVerified: true }) }}
+      editVerified={this.state.editVerified}
+    />
   }
 }
 

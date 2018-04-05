@@ -4,15 +4,15 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { bindActionCreators, compose } from 'redux'
 import ui from 'redux-ui'
-import { actions } from 'data'
-import { FormattedMessage } from 'react-intl'
+import { actions, selectors } from 'data'
+import { FormattedMessage, FormattedHTMLMessage } from 'react-intl'
 import { formValueSelector, Field } from 'redux-form'
 
 import { TextBox } from 'components/Form'
 import { Text, Button } from 'blockchain-info-components'
-
+import { spacing } from 'services/StyleService'
 import { required } from 'services/FormHelper'
-import { Form, ColLeft, ColRight, InputWrapper, PartnerHeader, PartnerSubHeader, ButtonWrapper, EmailHelper } from 'components/BuySell/Signup'
+import { Form, ColLeft, ColRight, InputWrapper, PartnerHeader, PartnerSubHeader, ButtonWrapper, EmailHelper, ColRightInner } from 'components/BuySell/Signup'
 
 const EmailInput = styled.div`
   display: flex;
@@ -35,7 +35,15 @@ class VerifyEmail extends Component {
   }
 
   componentDidMount () {
+    if (this.props.ui.create === 'enter_email_code') {
+      this.props.securityCenterActions.sendConfirmationCodeEmail(this.props.oldEmail)
+    }
     this.props.formActions.change('coinifyCreate', 'emailAddress', this.props.oldEmail)
+  }
+
+  componentDidUpdate (prevProps) {
+    if (this.props.emailVerified && this.props.ui.uniqueEmail && !this.props.editVerified) this.props.updateUI({ create: 'create_account' })
+    if (this.props.emailVerified && !prevProps.emailVerified) this.props.updateUI({ create: 'create_account' })
   }
 
   resendCode () {
@@ -79,7 +87,7 @@ class VerifyEmail extends Component {
               ui.create === 'enter_email_code'
                 ? <EmailInput>
                   <Text size='14px' weight={400} style={{'margin-bottom': '5px'}}>
-                    <FormattedMessage id='coinifyexchangedata.create.verifyemail.code' defaultMessage='Enter your verification code:' />
+                    <FormattedHTMLMessage id='coinifyexchangedata.create.verifyemail.code' defaultMessage='We emailed a verification code to {email}' values={{email: this.props.emailAddress}} />
                   </Text>
                   <Field name='emailCode' onChange={() => this.props.updateUI({ uniqueEmail: true })} component={TextBox} validate={[required]} />
                   <EmailHelper error={emailVerifiedError}>
@@ -88,28 +96,26 @@ class VerifyEmail extends Component {
                 </EmailInput>
                 : <EmailInput>
                   <Text size='14px' weight={400} style={{'margin-bottom': '5px'}}>
-                    <FormattedMessage id='coinifyexchangedata.create.verifyemail.confirm' defaultMessage="Enter the email address you'd like to verify:" />
+                    <FormattedMessage id='coinifyexchangedata.create.verifyemail.confirm' defaultMessage="Confirm Email:" />
                   </Text>
                   <Field name='emailAddress' component={TextBox} validate={[required]} />
+                  <Button nature='primary' type='submit' disabled={!this.props.emailAddress} style={spacing('mt-15')}>
+                    <FormattedMessage id='coinifyexchangedata.create.mobile.number' defaultMessage='Send Email Verification Code' />
+                  </Button>
                 </EmailInput>
             }
           </InputWrapper>
         </ColLeft>
         <ColRight>
-          {
-            ui.create === 'enter_email_code'
-              ? <ButtonWrapper>
-                <Button uppercase type='submit' nature='primary' fullwidth disabled={invalid}>
-                  <FormattedMessage id='coinifyexchangedata.create.verifyemail.continue' defaultMessage='Continue' />
-                </Button>
-              </ButtonWrapper>
-              : <ButtonWrapper>
-                <Button type='submit' nature='primary' fullwidth disabled={invalid}>
-                  <FormattedMessage id='coinifyexchangedata.create.verifyemail.sendverificationemail' defaultMessage='Send Verification Code Email' />
-                </Button>
-                <CancelText onClick={() => this.props.updateUI({create: 'enter_email_code'})}>Cancel</CancelText>
-              </ButtonWrapper>
-          }
+          <ColRightInner>
+            <ButtonWrapper>
+              <Button type='submit' nature='primary' fullwidth uppercase disabled={invalid || ui.create !== 'enter_email_code' || !this.props.emailCode}>
+                <FormattedMessage id='coinifyexchangedata.create.verifyemail.continue' defaultMessage='Continue' />
+              </Button>
+              <CancelText onClick={() => this.props.updateUI({create: 'create_account'})}>Cancel</CancelText>
+            </ButtonWrapper>
+            {/* <FAQ1 /> */}
+          </ColRightInner>
         </ColRight>
       </Form>
     )
@@ -128,7 +134,8 @@ VerifyEmail.propTypes = {
 
 const mapStateToProps = (state) => ({
   emailCode: formValueSelector('coinifyCreate')(state, 'emailCode'),
-  emailAddress: formValueSelector('coinifyCreate')(state, 'emailAddress')
+  emailAddress: formValueSelector('coinifyCreate')(state, 'emailAddress'),
+  oldEmail: selectors.core.settings.getEmail(state).data
 })
 
 const mapDispatchToProps = (dispatch) => ({
