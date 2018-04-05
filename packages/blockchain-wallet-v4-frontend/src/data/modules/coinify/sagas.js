@@ -23,7 +23,6 @@ export const coinifySignup = function * () {
 
 export const coinifySaveMedium = function * (data) {
   const medium = data.payload
-  yield put(A.saveMediumSuccess(medium))
   yield put(actions.modals.replaceModal('CoinifyExchangeData', { step: 'confirm', medium: medium }))
   // yield put(A.coinifyNextStep('confirm'))
 }
@@ -32,7 +31,7 @@ export const buy = function * (payload) {
   try {
     const buyResult = yield call(sagas.core.data.coinify.buy, payload)
     console.log('FE coinify buy saga and then showModal', buyResult)
-    yield put(actions.modals.replaceModal('CoinifyExchangeData', { step: 'isx', trade: buyResult }))
+    yield put(actions.modals.replaceModal('CoinifyExchangeData', { step: 'isx', kyc: buyResult }))
     yield put(actions.alerts.displaySuccess('Buy trade successfully created!'))
     // yield put(A.coinifyNextStep('isx'))
   } catch (e) {
@@ -40,8 +39,20 @@ export const buy = function * (payload) {
   }
 }
 
+export const triggerKYC = function * () {
+  try {
+    const kyc = yield call(sagas.core.data.coinify.triggerKYC)
+    console.log('kycTriggered FE Saga', kyc)
+    yield put(actions.modals.showModal('CoinifyExchangeData', { step: 'isx', kyc: kyc }))
+  } catch (e) {
+    console.log('triggerKYC Error', e)
+    yield put(actions.alerts.displayError('KYC error'))
+  }
+}
+
 export default function * () {
   yield takeLatest(AT.SIGNUP, coinifySignup)
   yield takeLatest(AT.COINIFY_SAVE_MEDIUM, coinifySaveMedium)
   yield takeLatest(AT.COINIFY_BUY, buy)
+  yield takeLatest(AT.TRIGGER_KYC, triggerKYC)
 }

@@ -39,13 +39,13 @@ class SfoxExchangeData extends React.Component {
   }
 
   getStepComponent (step, rest) {
-    const { medium, trade } = { ...rest }
+    const { medium, kyc } = { ...rest }
     switch (step) {
       case 'account': return <Create />
       case 'order': return <Order />
       case 'payment': return <Payment />
       case 'confirm': return <Confirm medium={medium}/>
-      case 'isx': return <ISignThis trade={trade}/>
+      case 'isx': return <ISignThis kyc={kyc}/>
     }
   }
 

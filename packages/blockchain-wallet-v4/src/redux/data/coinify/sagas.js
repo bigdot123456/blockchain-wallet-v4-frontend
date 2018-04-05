@@ -45,8 +45,22 @@ export const coinifySaga = ({ api, coinifyService } = {}) => {
     }
   }
 
+  const triggerKYC = function * () {
+    try {
+      yield put(A.triggerKycLoading())
+      const coinify = yield call(getCoinify)
+      const kyc = yield apply(coinify, coinify.triggerKYC)
+
+      yield put(A.triggerKycSuccess(kyc))
+      return kyc
+    } catch (e) {
+      yield put(A.triggerKycFailure(e))
+    }
+  }
+
   return {
+    buy,
     signup,
-    buy
+    triggerKYC
   }
 }

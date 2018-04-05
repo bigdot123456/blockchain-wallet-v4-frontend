@@ -23,6 +23,7 @@ class Checkout extends React.Component {
         showModal={showModal}
         rateQuote={rateQuote}
         fetchQuote={(quote) => fetchQuote({ quote, nextAddress: value.nextAddress })}
+        triggerKYC={() => this.props.coinifyActions.triggerKYC()}
       />,
       Failure: (msg) => <div>Failure: {msg.error}</div>,
       Loading: () => <div>Loading...</div>,
@@ -41,7 +42,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   modalActions: bindActionCreators(actions.modals, dispatch),
-  coinifyDataActions: bindActionCreators(actions.core.data.coinify, dispatch)
+  coinifyDataActions: bindActionCreators(actions.core.data.coinify, dispatch),
+  coinifyActions: bindActionCreators(actions.modules.coinify, dispatch)
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Checkout)

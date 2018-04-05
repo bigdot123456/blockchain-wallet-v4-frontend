@@ -172,9 +172,9 @@ class ISignThisContainer extends Component {
 
   render () {
     console.log('render isx', this.props)
-    const { trade } = this.props
+    const { kyc } = this.props
     const iSignThisDomain = 'https://verify.isignthis.com'
-    const iSignThisID = trade.iSignThisID
+    const iSignThisID = kyc.iSignThisID
     const srcUrl = `${iSignThisDomain}/landing/${iSignThisID}`
     return (
       <div>

@@ -72,6 +72,7 @@ const Success = props => {
           : <p>Rate Loading..</p>
       }
       <button onClick={() => props.showModal('CoinifyExchangeData', { step: 'order' })}>open modal at order step</button>
+      <button onClick={props.triggerKYC}>trigger KYC + open modal</button>
     </div>
   )
   // const { fetchQuote, handleTrade, quote, base, errors, showModal, ...rest } = props
