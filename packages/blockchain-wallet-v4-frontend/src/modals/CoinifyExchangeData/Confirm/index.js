@@ -58,7 +58,6 @@ class ConfirmContainer extends Component {
 const mapStateToProps = (state) => ({
   data: getData(state),
   rateQuote: selectors.core.data.coinify.getRateQuote(state),
-  medium: path(['coinify', 'medium'], state),
   editingAmount: formValueSelector('coinifyConfirm')(state, 'amount')
 })
 

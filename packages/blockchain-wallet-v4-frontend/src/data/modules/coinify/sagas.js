@@ -10,7 +10,8 @@ export const coinifySignup = function * () {
     yield call(sagas.core.data.coinify.signup)
     const profile = yield select(selectors.core.data.coinify.getProfile)
     if (!profile.error) {
-      yield put(A.coinifyNextStep('order'))
+      // yield put(A.coinifyNextStep('order'))
+      yield put(actions.modals.replaceModal('CoinifyExchangeData', { step: 'order' }))
       yield put(actions.alerts.displaySuccess('Account successfully created!'))
     } else {
       yield put(A.coinifySignupFailure(profile.error))
@@ -23,14 +24,17 @@ export const coinifySignup = function * () {
 export const coinifySaveMedium = function * (data) {
   const medium = data.payload
   yield put(A.saveMediumSuccess(medium))
-  yield put(A.coinifyNextStep('confirm'))
+  yield put(actions.modals.replaceModal('CoinifyExchangeData', { step: 'confirm', medium: medium }))
+  // yield put(A.coinifyNextStep('confirm'))
 }
 
 export const buy = function * (payload) {
   try {
-    yield call(sagas.core.data.coinify.buy, payload)
+    const buyResult = yield call(sagas.core.data.coinify.buy, payload)
+    console.log('FE coinify buy saga and then showModal', buyResult)
+    yield put(actions.modals.replaceModal('CoinifyExchangeData', { step: 'isx', trade: buyResult }))
     yield put(actions.alerts.displaySuccess('Buy trade successfully created!'))
-    yield put(A.coinifyNextStep('isx'))
+    // yield put(A.coinifyNextStep('isx'))
   } catch (e) {
     yield put(actions.alerts.displayError('Error buying.'))
   }

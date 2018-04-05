@@ -19,7 +19,8 @@ class PaymentContainer extends Component {
   }
 
   toConfirmStep () {
-    this.props.coinifyActions.coinifyNextStep('confirm')
+    // this.props.coinifyActions.coinifyNextStep('confirm')
+    this.props.modalActions.replaceModal('CoinifyExchangeData', { step: 'confirm' })
   }
 
   handlePaymentClick (medium) {
@@ -67,7 +68,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   coinifyDataActions: bindActionCreators(actions.core.data.coinify, dispatch),
   formActions: bindActionCreators(actions.form, dispatch),
-  coinifyActions: bindActionCreators(actions.modules.coinify, dispatch)
+  coinifyActions: bindActionCreators(actions.modules.coinify, dispatch),
+  modalActions: bindActionCreators(actions.modals, dispatch)
 })
 
 const enhance = compose(

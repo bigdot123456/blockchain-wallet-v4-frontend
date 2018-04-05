@@ -56,7 +56,8 @@ const Payment = (props) => {
 }
 
 Payment.propTypes = {
-  handleSignup: PropTypes.func.isRequired,
+  handlePaymentClick: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
   smsNumber: PropTypes.string
 }
 

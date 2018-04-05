@@ -16,7 +16,8 @@ class OrderContainer extends Component {
   }
   nextStep () {
     this.props.coinifyDataActions.getPaymentMediums(this.props.quote.data)
-    this.props.coinifyActions.coinifyNextStep('payment')
+    // this.props.coinifyActions.coinifyNextStep('payment')
+    this.props.modalActions.replaceModal('CoinifyExchangeData', { step: 'payment' })
   }
 
   render () {
@@ -37,7 +38,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   formActions: bindActionCreators(actions.form, dispatch),
   coinifyDataActions: bindActionCreators(actions.core.data.coinify, dispatch),
-  coinifyActions: bindActionCreators(actions.modules.coinify, dispatch)
+  coinifyActions: bindActionCreators(actions.modules.coinify, dispatch),
+  modalActions: bindActionCreators(actions.modals, dispatch)
 })
 
 const enhance = compose(

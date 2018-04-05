@@ -52,13 +52,13 @@ const sfoxReducer = (state = INITIAL_STATE, action) => {
     case AT.COINIFY_FETCH_TRADES_FAILURE: {
       return assoc('trades', Remote.Failure(payload), state)
     }
-    case AT.HANDLE_TRADE_LOADING: {
+    case AT.COINIFY_HANDLE_TRADE_LOADING: {
       return assoc('trade', Remote.Loading, state)
     }
-    case AT.HANDLE_TRADE_SUCCESS: {
+    case AT.COINIFY_HANDLE_TRADE_SUCCESS: {
       return assoc('trade', Remote.Success(payload), state)
     }
-    case AT.HANDLE_TRADE_FAILURE: {
+    case AT.COINIFY_HANDLE_TRADE_FAILURE: {
       return assoc('trade', Remote.Failure(payload), state)
     }
     case AT.SET_PROFILE_SUCCESS: {
@@ -71,12 +71,6 @@ const sfoxReducer = (state = INITIAL_STATE, action) => {
       return state
     }
     case AT.UPLOAD_FAILURE: {
-      return state
-    }
-    case AT.SET_BANK_ACCOUNT_SUCCESS: {
-      return state
-    }
-    case AT.SET_BANK_ACCOUNT_FAILURE: {
       return state
     }
     case AT.COINIFY_SIGNUP_SUCCESS: {

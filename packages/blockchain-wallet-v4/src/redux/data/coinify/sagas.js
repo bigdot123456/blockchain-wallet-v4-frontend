@@ -32,11 +32,15 @@ export const coinifySaga = ({ api, coinifyService } = {}) => {
   const buy = function * (data) {
     const { quote, medium } = data.payload
     try {
+      yield put(A.coinifyHandleTradeLoading())
       const mediums = yield apply(quote, quote.getPaymentMediums)
       const accounts = yield apply(mediums[medium], mediums[medium].getAccounts)
       const buyResult = yield apply(accounts[0], accounts[0].buy)
       console.log('coinify buy result in core', buyResult)
+      yield put(A.coinifyHandleTradeSuccess(buyResult))
+      return buyResult
     } catch (e) {
+      yield put(A.coinifyHandleTradeFailure())
       console.warn('buy failed in core', e)
     }
   }

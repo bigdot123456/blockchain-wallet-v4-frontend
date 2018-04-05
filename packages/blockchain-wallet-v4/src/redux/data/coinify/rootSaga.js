@@ -82,17 +82,6 @@ export default ({ api, coinifyService } = {}) => {
     }
   }
 
-  const fetchAccounts = function * () {
-    try {
-      yield put(A.fetchAccountsLoading())
-      const methods = yield apply(coinify, coinify.getBuyMethods)
-      const accounts = yield apply(coinify, methods.ach.getAccounts)
-      yield put(A.fetchAccountsSuccess(accounts))
-    } catch (e) {
-      yield put(A.fetchAccountsFailure(e))
-    }
-  }
-
   const resetProfile = function * () {
     yield put(A.resetProfile())
   }
@@ -120,7 +109,6 @@ export default ({ api, coinifyService } = {}) => {
 
   return function * () {
     yield takeLatest(buySellAT.FETCH_METADATA_BUYSELL_SUCCESS, init)
-    yield takeLatest(AT.FETCH_ACCOUNTS, fetchAccounts)
     yield takeLatest(AT.COINIFY_FETCH_PROFILE, fetchProfile)
     yield takeLatest(AT.COINIFY_FETCH_TRADES, fetchTrades)
     yield takeLatest(AT.COINIFY_FETCH_QUOTE, fetchQuote)

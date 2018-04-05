@@ -18,7 +18,7 @@ class ISignThisContainer extends Component {
 
     var e = document.getElementById('isx-iframe')
     const iSignThisDomain = 'https://verify.isignthis.com'
-    // const iSignThisID = '6ae7fdad-4f3b-406a-9a59-f12c135c7709'
+    // const iSignThisID = this.props.iSignThisID
 
     var _isx = {
       transactionId: '',
@@ -171,6 +171,11 @@ class ISignThisContainer extends Component {
   }
 
   render () {
+    console.log('render isx', this.props)
+    const { trade } = this.props
+    const iSignThisDomain = 'https://verify.isignthis.com'
+    const iSignThisID = trade.iSignThisID
+    const srcUrl = `${iSignThisDomain}/landing/${iSignThisID}`
     return (
       <div>
         <h3>iSignThis step</h3>
@@ -178,7 +183,7 @@ class ISignThisContainer extends Component {
         {/* <div style={{width: '80%'}} id='isx-container' /> */}
 
         <iframe style={{width: '80%', height: '400px'}}
-          src="https://verify.isignthis.com/landing/6ae7fdad-4f3b-406a-9a59-f12c135c7709" // hardcode a trade
+          src={srcUrl}
           sandbox='allow-same-origin allow-scripts allow-forms'
           scrolling='yes'
           id='isx-iframe'
@@ -189,6 +194,7 @@ class ISignThisContainer extends Component {
 }
 
 const mapStateToProps = (state) => ({
+  // iSignThisId: selectors.core.data.coinify.getLatestTradePaymentId(state)
   hello: 'world'
 })
 

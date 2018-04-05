@@ -38,19 +38,20 @@ class SfoxExchangeData extends React.Component {
     setTimeout(this.props.close, 500)
   }
 
-  getStepComponent (step) {
+  getStepComponent (step, rest) {
+    const { medium, trade } = { ...rest }
     switch (step) {
       case 'account': return <Create />
       case 'order': return <Order />
       case 'payment': return <Payment />
-      case 'confirm': return <Confirm />
-      case 'isx': return <ISignThis />
+      case 'confirm': return <Confirm medium={medium}/>
+      case 'isx': return <ISignThis trade={trade}/>
     }
   }
 
   render () {
     const { show } = this.state
-    const step = this.props.signupStep || this.props.step
+    const { step, ...rest } = this.props
 
     return (
       <Tray in={show} class='tray' onClose={this.handleClose.bind(this)}>
@@ -58,7 +59,7 @@ class SfoxExchangeData extends React.Component {
           <StepIndicator step={step} stepMap={this.stepMap} />
         </ModalHeader>
         <ModalBody>
-          { this.getStepComponent(step) }
+          { this.getStepComponent(step, {...rest}) }
         </ModalBody>
       </Tray>
     )
@@ -66,13 +67,13 @@ class SfoxExchangeData extends React.Component {
 }
 
 SfoxExchangeData.propTypes = {
-  step: PropTypes.oneOf(['account', 'confirm', 'order', 'payment']),
+  step: PropTypes.oneOf(['account', 'confirm', 'order', 'payment', 'isx']),
   close: PropTypes.function
 }
 
 const mapStateToProps = (state) => ({
-  data: getData(state),
-  signupStep: path(['coinify', 'signupStep'], state)
+  data: getData(state)
+  // signupStep: path(['coinify', 'signupStep'], state)
 })
 
 const mapDispatchToProps = (dispatch) => ({
